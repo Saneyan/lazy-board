@@ -46,8 +46,6 @@ The single page application (SPA) has often complex routing due to user login se
 For example, there is /admin view that only 'admin' session accepts and /signin view that only no-session accepts. If the `currentSession` property has no value, no one cannot see admin view but anyone can signin view. To catch unmatched session error, listen to `lazy-board-unmatched-session` event lazy-board dispatches.
 
 ```html
-...
-
 <lazy-board id="board" base-url="/" source-base-url="/src/html" session="[[currentSession]]">
   <lazy-board-view scope="/admin" with-session="admin">
     <my-admin-view path="/"></my-admin-view>
@@ -59,26 +57,20 @@ For example, there is /admin view that only 'admin' session accepts and /signin 
 </lazy-board>
 
 <script>
-Polymer({
-  listeners: {
-    'board.lazy-board-unmatched-session': '_handleUnmatchedSessionError'
-  },
-  
-  _handleUnmatchedSessionError: function (e) {
-    switch (e.detail.expects) {
-      'admin':
-        console.error("Assumes 'admin' session!");
-        redirectTo('/signin');
-        break;
-      'no_session':
-        console.error('Assumes NO session!');
-        redirectTo('/admin');
-        break;
-  }
+var board = document.getElementById('board');
+
+board.addEventListener('lazy-board-unmatched-session', function (e) {
+  switch (e.detail.expects) {
+    'admin':
+      console.error("Assumes 'admin' session!");
+      redirectTo('/signin');
+      break;
+    'no_session':
+      console.error('Assumes NO session!');
+      redirectTo('/admin');
+      break;
 });
 </script>
-
-...
 ```
 
 ### Conclusion
