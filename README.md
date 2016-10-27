@@ -2,6 +2,12 @@
 
 Session based routing and lazy HTML importing.
 
+## Installation
+
+```
+$ bower install lazy-board --save
+```
+
 ## Usage
 
 ### Adding Page
