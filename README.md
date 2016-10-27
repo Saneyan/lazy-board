@@ -34,7 +34,6 @@ To route and import by URL, configuring base URLs and view scope.
 
  * `scope` is the directory name. **(required)**
  * `source-scope` is the directory name for source path.
- * `with-session` is 
  
 #### custom-element
 
