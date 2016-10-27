@@ -75,6 +75,7 @@ board.addEventListener('lazy-board-unmatched-session', function (e) {
       console.error('Assumes NO session!');
       redirectTo('/admin');
       break;
+  }
 });
 </script>
 ```
