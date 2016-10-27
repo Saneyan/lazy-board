@@ -67,11 +67,11 @@ var board = document.getElementById('board');
 
 board.addEventListener('lazy-board-unmatched-session', function (e) {
   switch (e.detail.expects) {
-    'admin':
+    case 'admin':
       console.error("Assumes 'admin' session!");
       redirectTo('/signin');
       break;
-    'no_session':
+    case 'no_session':
       console.error('Assumes NO session!');
       redirectTo('/admin');
       break;
