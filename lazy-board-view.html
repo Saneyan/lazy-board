@@ -87,7 +87,11 @@
           var sourceScope, path;
 
           if (!view.templateUrl) {
-            sourceScope = this.sourceScope ? boardData.actualScope + this.sourceScope : actualScope;
+            if (this.sourceScope) {
+              sourceScope = this.sourceScope === '/' ? boardData.actualScope : boardData.actualScope + this.sourceScope;
+            } else {
+              sourceScope = actualScope;
+            }
             sourceScope = sourceScope.replace(/:/g, '_');
             view.templateUrl = boardData.sourceBaseUrl + sourceScope + '/' + view.tagName.toLowerCase() + '.html';
             path = view.getAttribute('path');
