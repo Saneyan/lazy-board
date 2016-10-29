@@ -1,7 +1,7 @@
 {
   "name": "lazy-board",
   "description": "Session based routing and lazy HTML importing.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "license": "MIT",
   "authors": [
     "TADOKORO Saneyuki <saneyan@gfunction.com>"
