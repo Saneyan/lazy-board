@@ -94,7 +94,7 @@
       },
 
       switchView: function (path) {
-        this.path
+        this._path = path;
       },
 
       /**
@@ -197,8 +197,7 @@
           });
           return false;
         }
-
-        if (view.withoutSession && this.session || this.session === '' || this.session === 'no_session') {
+        if (view.withoutSession && this.session !== '' && this.session !== 'no_session') {
           this.fire('lazy-board-unmatched-session', {
             expects: 'no_session'
           });
