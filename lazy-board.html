@@ -1,12 +1,16 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../app-route/app-route.html">
+<link rel="import" href="../iron-location/iron-location.html">
+<link rel="import" href="../iron-location/iron-query-params.html">
 <link rel="import" href="./lazy-board-behavior.html">
 
 <dom-module id="lazy-board">
 
   <template>
 
-    <app-location route="{{route}}"></app-location>
+    <iron-location path="{{_path}}" query="{{_query}}"></iron-location>
+    <iron-query-params
+        params-string="{{_query}}"
+        params-object="{{_queryParams}}"></iron-query-params>
 
     <slot></slot>
 
@@ -19,7 +23,7 @@
 
       behaviors: [Polymer.LazyBoardBehavior],
 
-      observers: ['_routeChanged(route.*, _routes)'],
+      observers: ['_routeChanged(_path, _queryParams, _routes)'],
 
       properties: {
 
@@ -89,6 +93,10 @@
         this._routes = routes;
       },
 
+      switchView: function (path) {
+        this.path
+      },
+
       /**
        * Activating specific view element.
        *
@@ -138,19 +146,20 @@
       /**
        * Observing route changing.
        *
-       * @param e
+       * @param path
+       * @param queryParams
        * @private
        */
-      _routeChanged: function (e) {
+      _routeChanged: function (path, queryParams /*, unused '_route' variable */) {
         var route, routeOption;
-        var basePiece = e.base.path.replace(/^\//, '').split('/');
+        var basePiece = path.replace(/^\//, '').split('/');
 
         for (var ri = 0; ri < this._routes.length; ri++) {
           route = this._routes[ri];
           routeOption = this._matchRoute(route.path, basePiece);
 
           if (routeOption) {
-            routeOption.queryParams = e.base.__queryParams;
+            routeOption.queryParams = queryParams;
             this.activateView(route.tagName, routeOption);
             break;
           }

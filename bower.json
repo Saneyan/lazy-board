@@ -15,7 +15,7 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.7.0",
-    "app-route": "polymerelements/app-route#^0.9.1"
+    "iron-location": "polymerelements/iron-location#^0.8.9"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0",
