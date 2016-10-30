@@ -23,7 +23,9 @@
 
       behaviors: [Polymer.LazyBoardBehavior],
 
-      observers: ['_routeChanged(_path, _queryParams, _routes)'],
+      observers: [
+          '_routeChanged(_path, _queryParams, _routes, session)'
+      ],
 
       properties: {
 
@@ -47,6 +49,11 @@
         session: {
           type: String,
           observer: '_sessionChanged'
+        },
+
+        lazySession: {
+          type: Boolean,
+          value: false
         },
 
         /**
@@ -91,6 +98,10 @@
         }.bind(this));
 
         this._routes = routes;
+
+        if (!this.lazySession && !this.session) {
+          this.session = null;
+        }
       },
 
       switchView: function (path) {
@@ -137,7 +148,9 @@
        * This method dispatches exit event for the view.
        */
       deactivateView: function () {
-        this.currentView.fire('lazy-board-view-exit');
+        if (this.currentView.is) {
+          this.currentView.fire('lazy-board-view-exit');
+        }
         // The current view is hiding.
         this.currentView.style.display = 'none';
         this.currentView = null;
@@ -150,7 +163,7 @@
        * @param queryParams
        * @private
        */
-      _routeChanged: function (path, queryParams /*, unused '_route' variable */) {
+      _routeChanged: function (path, queryParams /* [, _route , session] */) {
         var route, routeOption;
         var basePiece = path.replace(/^\//, '').split('/');
 
@@ -197,7 +210,8 @@
           });
           return false;
         }
-        if (view.withoutSession && this.session !== '' && this.session !== 'no_session') {
+
+        if (view.withoutSession && this.session && this.session !== 'no_session') {
           this.fire('lazy-board-unmatched-session', {
             expects: 'no_session'
           });
