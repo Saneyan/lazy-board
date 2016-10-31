@@ -47,8 +47,7 @@
          * Observing current session.
          */
         session: {
-          type: String,
-          observer: '_sessionChanged'
+          type: String
         },
 
         lazySession: {
@@ -68,6 +67,14 @@
          */
         _routes: {
           type: Array
+        },
+
+        _currentPath: {
+          type: String
+        },
+
+        _currentQueryParams: {
+          type: Object
         }
       },
 
@@ -159,40 +166,33 @@
       /**
        * Observing route changing.
        *
-       * @param path
-       * @param queryParams
        * @private
        */
-      _routeChanged: function (path, queryParams /* [, _route , session] */) {
+      _routeChanged: function (/* [_path, _queryParams, _route, session] */) {
+        if (this._currentPath === this._path && this._currentQueryParams === this._queryParams) {
+          return;
+        }
+
         var route, routeOption;
-        var basePiece = path.replace(/^\//, '').split('/');
+        var basePiece = this._path.replace(/^\//, '').split('/');
 
         for (var ri = 0; ri < this._routes.length; ri++) {
           route = this._routes[ri];
           routeOption = this._matchRoute(route.path, basePiece);
 
           if (routeOption) {
-            routeOption.queryParams = queryParams;
+            routeOption.queryParams = this._queryParams;
             this.activateView(route.tagName, routeOption);
             break;
           }
         }
 
+        this._currentPath = this._path;
+        this._currentQueryParams = this._queryParams;
+
         // No routes matched. So it goes to view not found.
         if (this._routes.length === ri) {
           this._notFound();
-        }
-      },
-
-      /**
-       * Observing session changing.
-       * This observer checks if the current view matches with expected session after changing session.
-       *
-       * @private
-       */
-      _sessionChanged: function () {
-        if (this.currentView) {
-          this._matchSession(this.currentView)
         }
       },
 
@@ -240,7 +240,7 @@
         for (var pi in routePiece) {
           name = routePiece[pi];
 
-          if (!basePiece[pi] || basePiece[pi] === '') {
+          if (!basePiece[pi] === undefined) {
             return false;
           }
 
