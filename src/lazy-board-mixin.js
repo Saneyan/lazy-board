@@ -1,8 +1,7 @@
-<script>
+export default (superClass) => {
+  return class extends superClass {
 
-  Polymer.LazyBoardBehavior = {
-
-    _getDirectView: function () {
+    _getDirectView() {
       var child, children = [];
 
       for (var i in this.children) {
@@ -13,9 +12,9 @@
       }
 
       return children;
-    },
+    }
 
-    _getDirectLazyBoardView: function () {
+    _getDirectLazyBoardView() {
       var child, children = [];
 
       for (var i in this.children) {
@@ -27,7 +26,5 @@
 
       return children;
     }
-
-  };
-
-</script>
+  }
+}

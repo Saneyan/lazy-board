@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>lazy-board demo</title>
+    <link rel="import" href="../lazy-board.html">
+    <link rel="import" href="../lazy-board-view.html">
+  </head>
+  <body>
+    <dom-bind>
+      <template>
+
+        <sy-session session="{{session}}"></sy-session>
+
+        <lazy-board
+          id="board"
+          base-url="/"
+          source-base-url="/components/lazy-board"
+          lazy-session
+          session="[[session]]">
+
+          <lazy-board-view scope="/">
+            <sy-home-view path="/"></sy-home-view>
+            <sy-profile-view path="/signin" without-session></sy-profile-view>
+          </lazy-board-view>
+
+          <lazy-board-view scope="/pictures">
+            <sy-picture-list-view path="/list"></sy-picture-list-view>
+            <lazy-board-view scope="/:name">
+              <sy-picture-view path="/about"></sy-picture-view>
+            </lazy-board-view>
+          </lazy-board-view>
+
+          <lazy-board-view scope="/admin" with-session="admin">
+            <sy-admin-view path="/"></sy-admin-view>
+          </lazy-board-view>
+
+        </lazy-board>
+
+      </template>
+    </dom-bind>
+
+    <script src="./demo.js"></script>
+  </body>
+</html>
