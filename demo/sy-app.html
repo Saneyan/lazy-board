@@ -1,0 +1,34 @@
+<dom-module id="sy-app">
+
+  <template>
+
+    <sy-session session="{{session}}"></sy-session>
+
+    <lazy-board
+      id="board"
+      base-url="/components/lazy-board/demo"
+      source-base-url="/components/lazy-board"
+      lazy-session
+      session="[[session]]">
+
+      <lazy-board-view scope="/">
+        <sy-home-view path="/"></sy-home-view>
+        <sy-signin-view path="/signin" without-session></sy-signin-view>
+      </lazy-board-view>
+
+      <lazy-board-view scope="/pictures">
+        <sy-picture-list-view path="/list"></sy-picture-list-view>
+        <lazy-board-view scope="/:name">
+          <sy-picture-view path="/about"></sy-picture-view>
+        </lazy-board-view>
+      </lazy-board-view>
+
+      <lazy-board-view scope="/admin" with-session="admin">
+        <sy-admin-view path="/"></sy-admin-view>
+      </lazy-board-view>
+
+    </lazy-board>
+
+  </template>
+
+</dom-module>

@@ -1,10 +1,10 @@
 module.exports = {
 
-  entry: "./src/index.js",
+  entry: "./demo/index.js",
 
   output: {
-    filename: "lazy-board.js",
-    path: __dirname
+    filename: "demo.js",
+    path: __dirname + '/demo'
   },
 
   resolve: {
