@@ -2,9 +2,9 @@ export default (superClass) => {
   return class extends superClass {
 
     _getDirectView() {
-      var child, children = [];
+      let child, children = [];
 
-      for (var i in this.children) {
+      for (let i in this.children) {
         child = this.children[i];
         if (child.tagName && child.tagName !== 'LAZY-BOARD-VIEW') {
           children.push(child);
@@ -15,9 +15,9 @@ export default (superClass) => {
     }
 
     _getDirectLazyBoardView() {
-      var child, children = [];
+      let child, children = [];
 
-      for (var i in this.children) {
+      for (let i in this.children) {
         child = this.children[i];
         if (child.tagName === 'LAZY-BOARD-VIEW') {
           children.push(child);
