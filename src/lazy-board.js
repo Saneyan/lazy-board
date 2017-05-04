@@ -67,7 +67,7 @@ export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
 
     // Preparing board data for each lazy-board-view. This object should be immutable.
     let boardData = {
-      sourceBaseUrl: this.sourceBaseUrl,
+      actualSourceScope: this.sourceBaseUrl || this.baseUrl,
       actualScope: this.baseUrl
     };
 
@@ -95,6 +95,11 @@ export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
     if (!this.lazySession && !this.session) {
       this.session = null;
     }
+
+    // Subscribing switching view event.
+    window.addEventListener('lazy-board-switch-view', (e) => {
+      this.switchView(e.detail.path);
+    });
   }
 
   switchView(path) {
@@ -128,11 +133,13 @@ export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
 
     if (view.is) {
       // The view has been registered, dispatch entry event with route option.
-      view.fire('lazy-board-view-entry', routeOption);
+      view.dispatchEvent(new CustomEvent('lazy-board-view-entry', {
+        detail: routeOption
+      }));
     } else {
       // The view has not been registered, trying to import the HTML and dispatch entry event.
       templateUrl = this.resolveUrl(view.templateUrl, null, null, true);
-      this.importHref(templateUrl, this._importSuccess.bind(this, tagName, routeOption), this._importError);
+      Polymer.importHref(templateUrl, this._importSuccess.bind(this, tagName, routeOption), this._importError.bind(this));
     }
   }
 
@@ -142,7 +149,7 @@ export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
    */
   deactivateView() {
     if (this.currentView.is) {
-      this.currentView.fire('lazy-board-view-exit');
+      this.currentView.dispatchEvent(new CustomEvent('lazy-board-view-exit'));
     }
     // The current view is hiding.
     this.currentView.style.display = 'none';
@@ -154,30 +161,30 @@ export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
    *
    * @private
    */
-  _routeChanged(/* [_path, _queryParams, _route, session] */) {
-    if (this._currentPath === this._path && this._currentQueryParams === this._queryParams) {
+  _routeChanged(_path, _queryParams, _routes, session) {
+    if (this._currentPath === _path && this._currentQueryParams === _queryParams || !_routes || session === undefined) {
       return;
     }
 
-    let route, routeOption;
-    let basePiece = this._path.replace(/^\//, '').split('/');
+    let ri, route, routeOption;
+    let basePiece = _path.replace(/^\//, '').replace(/\/$/, '').split('/');
 
-    for (let ri = 0; ri < this._routes.length; ri++) {
-      route = this._routes[ri];
+    for (ri = 0; ri < _routes.length; ri++) {
+      route = _routes[ri];
       routeOption = this._matchRoute(route.path, basePiece);
 
       if (routeOption) {
-        routeOption.queryParams = this._queryParams;
+        routeOption.queryParams = _queryParams;
         this.activateView(route.tagName, routeOption);
         break;
       }
     }
 
-    this._currentPath = this._path;
-    this._currentQueryParams = this._queryParams;
+    this._currentPath = _path;
+    this._currentQueryParams = _queryParams;
 
     // No routes matched. So it goes to view not found.
-    if (this._routes.length === ri) {
+    if (_routes.length === ri) {
       this._notFound();
     }
   }
@@ -191,16 +198,20 @@ export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
    */
   _matchSession(view) {
     if (view.withSession && view.withSession !== this.session) {
-      this.fire('lazy-board-unmatched-session', {
-        expects: view.withSession
-      });
+      this.dispatchEvent(new CustomEvent('lazy-board-unmatched-session', {
+        detail: {
+          expects: view.withSession
+        }
+      }));
       return false;
     }
 
     if (view.withoutSession && this.session && this.session !== 'no_session') {
-      this.fire('lazy-board-unmatched-session', {
-        expects: 'no_session'
-      });
+      this.dispatchEvent(new CustomEvent('lazy-board-unmatched-session', {
+        detail: {
+          expects: 'no_session'
+        }
+      }));
       return false;
     }
 
@@ -249,7 +260,9 @@ export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
    */
   _importSuccess(tagName, routeOption) {
     let view = Polymer.dom(this).querySelector(tagName);
-    view.fire('lazy-board-view-entry', routeOption);
+    view.dispatchEvent(new CustomEvent('lazy-board-view-entry', {
+      detail: routeOption
+    }));
   }
 
   /**
@@ -272,3 +285,5 @@ export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
   }
 
 }
+
+customElements.define(LazyBoard.is, LazyBoard);

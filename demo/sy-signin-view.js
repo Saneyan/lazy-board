@@ -1,7 +1,7 @@
-class SyAdminView extends Polymer.Element {
+class SySigninView extends Polymer.Element {
 
   static get is() {
-    return 'sy-admin-view';
+    return 'sy-signin-view';
   }
 
   connectedCallback() {
@@ -13,4 +13,4 @@ class SyAdminView extends Polymer.Element {
   }
 }
 
-customElements.define(SyAdminView.is, SyAdminView);
+customElements.define(SySigninView.is, SySigninView);

@@ -1,2 +1,2 @@
-.vscode/
-.idea/
+bower_components
+node_modules

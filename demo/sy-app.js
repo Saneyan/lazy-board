@@ -17,3 +17,5 @@ class SyApp extends Polymer.Element {
     });
   }
 }
+
+customElements.define(SyApp.is, SyApp);

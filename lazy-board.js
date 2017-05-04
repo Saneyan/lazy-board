@@ -75,9 +75,9 @@
   return class extends superClass {
 
     _getDirectView() {
-      var child, children = [];
+      let child, children = [];
 
-      for (var i in this.children) {
+      for (let i in this.children) {
         child = this.children[i];
         if (child.tagName && child.tagName !== 'LAZY-BOARD-VIEW') {
           children.push(child);
@@ -88,9 +88,9 @@
     }
 
     _getDirectLazyBoardView() {
-      var child, children = [];
+      let child, children = [];
 
-      for (var i in this.children) {
+      for (let i in this.children) {
         child = this.children[i];
         if (child.tagName === 'LAZY-BOARD-VIEW') {
           children.push(child);
@@ -164,12 +164,19 @@ class LazyBoardView extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__l
     let directView = this._getDirectView();
     let directLazyBoardView = this._getDirectLazyBoardView();
     let scope = this.scope === '/' ? '' : this.scope;
-    let actualScope, withSession, withoutSession;
+    let sourceScope = !this.sourceScope ? scope : this.sourceScope === '/' ? '' : this.sourceScope;
+    let actualScope, actualSourceScope, withSession, withoutSession;
 
     if (boardData.actualScope === '/' && scope.charAt(0) === '/') {
       actualScope = scope;
     } else {
       actualScope = boardData.actualScope + scope;
+    }
+
+    if (boardData.actualSourceScope === '/' && sourceScope.charAt(0) === '/') {
+      actualSourceScope = sourceScope;
+    } else {
+      actualSourceScope = boardData.actualSourceScope + sourceScope;
     }
 
     if (this.withSession) {
@@ -185,19 +192,12 @@ class LazyBoardView extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__l
     }
 
     directView.forEach(function (view) {
-      let sourceScope;
       let path = view.getAttribute('path');
 
       view.routePath = actualScope + (path === '/' ? '' : path);
 
       if (!view.templateUrl) {
-        if (this.sourceScope) {
-          sourceScope = this.sourceScope === '/' ? boardData.actualScope : boardData.actualScope + this.sourceScope;
-        } else {
-          sourceScope = actualScope;
-        }
-        sourceScope = sourceScope.replace(/:/g, '_');
-        view.templateUrl = boardData.sourceBaseUrl + sourceScope + '/' + view.tagName.toLowerCase() + '.html';
+        view.templateUrl = actualSourceScope.replace(/:/g, '_') + '/' + view.tagName.toLowerCase() + '.html';
       }
 
       if (!view.withSession && withSession) {
@@ -209,12 +209,12 @@ class LazyBoardView extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__l
       }
     }.bind(this));
 
-    // Inheriting prefix and sourceBaseUrl, but overriding another properties.
+    // Overriding another properties.
     let newBoardData = {
-      sourceBaseUrl: boardData.sourceBaseUrl,
-      actualScope: actualScope,
-      withSession: withSession,
-      withoutSession: withoutSession
+       actualSourceScope,
+       actualScope,
+       withSession,
+       withoutSession
     };
 
     directLazyBoardView.forEach(function (boardView) {
@@ -225,6 +225,8 @@ class LazyBoardView extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__l
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = LazyBoardView;
 
+
+customElements.define(LazyBoardView.is, LazyBoardView);
 
 /***/ }),
 /* 2 */
@@ -301,7 +303,7 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
 
     // Preparing board data for each lazy-board-view. This object should be immutable.
     let boardData = {
-      sourceBaseUrl: this.sourceBaseUrl,
+      actualSourceScope: this.sourceBaseUrl || this.baseUrl,
       actualScope: this.baseUrl
     };
 
@@ -329,6 +331,11 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
     if (!this.lazySession && !this.session) {
       this.session = null;
     }
+
+    // Subscribing switching view event.
+    window.addEventListener('lazy-board-switch-view', (e) => {
+      this.switchView(e.detail.path);
+    });
   }
 
   switchView(path) {
@@ -362,11 +369,13 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
 
     if (view.is) {
       // The view has been registered, dispatch entry event with route option.
-      view.fire('lazy-board-view-entry', routeOption);
+      view.dispatchEvent(new CustomEvent('lazy-board-view-entry', {
+        detail: routeOption
+      }));
     } else {
       // The view has not been registered, trying to import the HTML and dispatch entry event.
       templateUrl = this.resolveUrl(view.templateUrl, null, null, true);
-      this.importHref(templateUrl, this._importSuccess.bind(this, tagName, routeOption), this._importError);
+      Polymer.importHref(templateUrl, this._importSuccess.bind(this, tagName, routeOption), this._importError.bind(this));
     }
   }
 
@@ -376,7 +385,7 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
    */
   deactivateView() {
     if (this.currentView.is) {
-      this.currentView.fire('lazy-board-view-exit');
+      this.currentView.dispatchEvent(new CustomEvent('lazy-board-view-exit'));
     }
     // The current view is hiding.
     this.currentView.style.display = 'none';
@@ -388,30 +397,30 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
    *
    * @private
    */
-  _routeChanged(/* [_path, _queryParams, _route, session] */) {
-    if (this._currentPath === this._path && this._currentQueryParams === this._queryParams) {
+  _routeChanged(_path, _queryParams, _routes, session) {
+    if (this._currentPath === _path && this._currentQueryParams === _queryParams || !_routes || session === undefined) {
       return;
     }
 
-    let route, routeOption;
-    let basePiece = this._path.replace(/^\//, '').split('/');
+    let ri, route, routeOption;
+    let basePiece = _path.replace(/^\//, '').replace(/\/$/, '').split('/');
 
-    for (let ri = 0; ri < this._routes.length; ri++) {
-      route = this._routes[ri];
+    for (ri = 0; ri < _routes.length; ri++) {
+      route = _routes[ri];
       routeOption = this._matchRoute(route.path, basePiece);
 
       if (routeOption) {
-        routeOption.queryParams = this._queryParams;
+        routeOption.queryParams = _queryParams;
         this.activateView(route.tagName, routeOption);
         break;
       }
     }
 
-    this._currentPath = this._path;
-    this._currentQueryParams = this._queryParams;
+    this._currentPath = _path;
+    this._currentQueryParams = _queryParams;
 
     // No routes matched. So it goes to view not found.
-    if (this._routes.length === ri) {
+    if (_routes.length === ri) {
       this._notFound();
     }
   }
@@ -425,16 +434,20 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
    */
   _matchSession(view) {
     if (view.withSession && view.withSession !== this.session) {
-      this.fire('lazy-board-unmatched-session', {
-        expects: view.withSession
-      });
+      this.dispatchEvent(new CustomEvent('lazy-board-unmatched-session', {
+        detail: {
+          expects: view.withSession
+        }
+      }));
       return false;
     }
 
     if (view.withoutSession && this.session && this.session !== 'no_session') {
-      this.fire('lazy-board-unmatched-session', {
-        expects: 'no_session'
-      });
+      this.dispatchEvent(new CustomEvent('lazy-board-unmatched-session', {
+        detail: {
+          expects: 'no_session'
+        }
+      }));
       return false;
     }
 
@@ -483,7 +496,9 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
    */
   _importSuccess(tagName, routeOption) {
     let view = Polymer.dom(this).querySelector(tagName);
-    view.fire('lazy-board-view-entry', routeOption);
+    view.dispatchEvent(new CustomEvent('lazy-board-view-entry', {
+      detail: routeOption
+    }));
   }
 
   /**
@@ -507,6 +522,9 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
 
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = LazyBoard;
+
+
+customElements.define(LazyBoard.is, LazyBoard);
 
 
 /***/ }),

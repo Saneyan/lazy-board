@@ -111,6 +111,8 @@ class SyApp extends Polymer.Element {
   }
 }
 
+customElements.define(SyApp.is, SyApp);
+
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
@@ -119,6 +121,18 @@ class SyHomeView extends Polymer.Element {
 
   static get is() {
     return 'sy-home-view';
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    this.$.link.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('lazy-board-switch-view', {
+        detail: {
+          path: '/components/lazy-board/demo/signin'
+        }
+      }));
+    })
   }
 }
 
@@ -217,10 +231,10 @@ customElements.define(SySession.is, SySession);
 /* 6 */
 /***/ (function(module, exports) {
 
-class SyAdminView extends Polymer.Element {
+class SySigninView extends Polymer.Element {
 
   static get is() {
-    return 'sy-admin-view';
+    return 'sy-signin-view';
   }
 
   connectedCallback() {
@@ -232,7 +246,7 @@ class SyAdminView extends Polymer.Element {
   }
 }
 
-customElements.define(SyAdminView.is, SyAdminView);
+customElements.define(SySigninView.is, SySigninView);
 
 /***/ }),
 /* 7 */

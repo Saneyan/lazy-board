@@ -7,9 +7,16 @@
     "email": "saneyan@gfunction.com",
     "url": "https://gfunction.com"
   },
+  "scripts": {
+    "build": "webpack",
+    "build:demo": "webpack --config ./webpack.demo.js"
+  },
   "main": "src/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/Saneyan/lazy-board.git"
+  },
+  "dependencies": {
+    "webpack": "^2.4.1"
   }
 }

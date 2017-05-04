@@ -54,12 +54,19 @@ export default class LazyBoardView extends LazyBoardMixin(Polymer.Element) {
     let directView = this._getDirectView();
     let directLazyBoardView = this._getDirectLazyBoardView();
     let scope = this.scope === '/' ? '' : this.scope;
-    let actualScope, withSession, withoutSession;
+    let sourceScope = !this.sourceScope ? scope : this.sourceScope === '/' ? '' : this.sourceScope;
+    let actualScope, actualSourceScope, withSession, withoutSession;
 
     if (boardData.actualScope === '/' && scope.charAt(0) === '/') {
       actualScope = scope;
     } else {
       actualScope = boardData.actualScope + scope;
+    }
+
+    if (boardData.actualSourceScope === '/' && sourceScope.charAt(0) === '/') {
+      actualSourceScope = sourceScope;
+    } else {
+      actualSourceScope = boardData.actualSourceScope + sourceScope;
     }
 
     if (this.withSession) {
@@ -75,19 +82,12 @@ export default class LazyBoardView extends LazyBoardMixin(Polymer.Element) {
     }
 
     directView.forEach(function (view) {
-      let sourceScope;
       let path = view.getAttribute('path');
 
       view.routePath = actualScope + (path === '/' ? '' : path);
 
       if (!view.templateUrl) {
-        if (this.sourceScope) {
-          sourceScope = this.sourceScope === '/' ? boardData.actualScope : boardData.actualScope + this.sourceScope;
-        } else {
-          sourceScope = actualScope;
-        }
-        sourceScope = sourceScope.replace(/:/g, '_');
-        view.templateUrl = boardData.sourceBaseUrl + sourceScope + '/' + view.tagName.toLowerCase() + '.html';
+        view.templateUrl = actualSourceScope.replace(/:/g, '_') + '/' + view.tagName.toLowerCase() + '.html';
       }
 
       if (!view.withSession && withSession) {
@@ -99,12 +99,12 @@ export default class LazyBoardView extends LazyBoardMixin(Polymer.Element) {
       }
     }.bind(this));
 
-    // Inheriting prefix and sourceBaseUrl, but overriding another properties.
+    // Overriding another properties.
     let newBoardData = {
-      sourceBaseUrl: boardData.sourceBaseUrl,
-      actualScope: actualScope,
-      withSession: withSession,
-      withoutSession: withoutSession
+       actualSourceScope,
+       actualScope,
+       withSession,
+       withoutSession
     };
 
     directLazyBoardView.forEach(function (boardView) {
@@ -113,3 +113,5 @@ export default class LazyBoardView extends LazyBoardMixin(Polymer.Element) {
   }
 
 }
+
+customElements.define(LazyBoardView.is, LazyBoardView);
