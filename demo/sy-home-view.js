@@ -1,4 +1,4 @@
-class SyHomeView extends Polymer.Element {
+export default class SyHomeView extends Polymer.Element {
 
   static get is() {
     return 'sy-home-view';
@@ -16,5 +16,3 @@ class SyHomeView extends Polymer.Element {
     })
   }
 }
-
-customElements.define(SyHomeView.is, SyHomeView);

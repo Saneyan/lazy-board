@@ -4,7 +4,9 @@ module.exports = {
 
   output: {
     filename: "demo.js",
-    path: __dirname + '/demo'
+    path: __dirname + '/demo',
+    library: "LazyBoardDemo",
+    libraryTarget: "umd"
   },
 
   resolve: {

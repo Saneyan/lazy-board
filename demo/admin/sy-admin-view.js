@@ -1,4 +1,4 @@
-class SyAdminView extends Polymer.Element {
+export default class SyAdminView extends Polymer.Element {
 
   static get is() {
     return 'sy-admin-view';
@@ -12,5 +12,3 @@ class SyAdminView extends Polymer.Element {
     });
   }
 }
-
-customElements.define(SyAdminView.is, SyAdminView);

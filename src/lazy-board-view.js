@@ -1,6 +1,6 @@
-import LazyBoardMixin from './lazy-board-mixin';
+import LazyBoardBaseMixin from './lazy-board-base-mixin';
 
-export default class LazyBoardView extends LazyBoardMixin(Polymer.Element) {
+export default class LazyBoardView extends LazyBoardBaseMixin(Polymer.Element) {
 
   static get is() {
     return 'lazy-board-view';
@@ -81,23 +81,29 @@ export default class LazyBoardView extends LazyBoardMixin(Polymer.Element) {
       withoutSession = boardData.withoutSession;
     }
 
-    directView.forEach(function (view) {
-      let path = view.getAttribute('path');
+    directView.forEach((view) => {
+      let viewPath = view.getAttribute('path');
 
-      view.routePath = actualScope + (path === '/' ? '' : path);
+      view.routePath = actualScope + (viewPath === '/' ? '' : viewPath);
 
-      if (!view.templateUrl) {
+      if (!view.hasAttribute('template-url')) {
         view.templateUrl = actualSourceScope.replace(/:/g, '_') + '/' + view.tagName.toLowerCase() + '.html';
+      } else {
+        view.templateUrl = view.getAttribute('template-url');
       }
 
-      if (!view.withSession && withSession) {
+      if (!view.hasAttribute('with-session') && withSession) {
         view.withSession = withSession;
+      } else if (view.hasAttribute('with-session')) {
+        view.withSession = view.getAttribute('with-session');
       }
 
-      if (!view.withoutSession && withoutSession) {
+      if (!view.hasAttribute('without-session') && withoutSession) {
         view.withoutSession = withoutSession;
+      } else if (view.hasAttribute('without-session')) {
+        view.withoutSession = true;
       }
-    }.bind(this));
+    });
 
     // Overriding another properties.
     let newBoardData = {
@@ -107,11 +113,9 @@ export default class LazyBoardView extends LazyBoardMixin(Polymer.Element) {
        withoutSession
     };
 
-    directLazyBoardView.forEach(function (boardView) {
+    directLazyBoardView.forEach((boardView) => {
       boardView.assignBoardData(newBoardData);
     });
   }
 
 }
-
-customElements.define(LazyBoardView.is, LazyBoardView);

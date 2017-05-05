@@ -1,6 +1,6 @@
-import LazyBoardMixin from './lazy-board-mixin';
+import LazyBoardBaseMixin from './lazy-board-base-mixin';
 
-export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
+export default class LazyBoard extends LazyBoardBaseMixin(Polymer.Element) {
 
   static get is() {
     return 'lazy-board';
@@ -72,7 +72,7 @@ export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
     };
 
     // Assigning board data to each lazy-board-view
-    this._getDirectLazyBoardView().forEach(function (boardView) {
+    this._getDirectLazyBoardView().forEach((boardView) => {
       boardView.assignBoardData(boardData);
     });
 
@@ -81,14 +81,14 @@ export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
     let routes = [];
 
     // Hiding all children except lazy-board-view and getting each route path and tag name.
-    children.forEach(function (child) {
+    children.forEach((child) => {
       child.style.display = 'none';
 
       routes.push({
         path: child.routePath.replace(/^\//, '').split('/'),
         tagName: child.tagName.toLowerCase()
       });
-    }.bind(this));
+    });
 
     this._routes = routes;
 
@@ -285,5 +285,3 @@ export default class LazyBoard extends LazyBoardMixin(Polymer.Element) {
   }
 
 }
-
-customElements.define(LazyBoard.is, LazyBoard);

@@ -1,3 +1,6 @@
+<link rel="import" href="../lazy-board.html">
+<link rel="import" href="../lazy-board-view.html">
+
 <dom-module id="sy-app">
 
   <template>
@@ -7,6 +10,7 @@
     <lazy-board
       id="board"
       base-url="/components/lazy-board/demo"
+      lazy-session
       session="[[session]]">
 
       <lazy-board-view scope="/">
@@ -28,5 +32,8 @@
     </lazy-board>
 
   </template>
+
+  <script src="./demo.js"></script>
+  <script>customElements.define(LazyBoardDemo.SyApp.is, LazyBoardDemo.SyApp);</script>
 
 </dom-module>

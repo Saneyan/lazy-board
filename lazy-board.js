@@ -1,4 +1,14 @@
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["LazyBoard"] = factory();
+	else
+		root["LazyBoard"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -107,10 +117,10 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lazy_board_mixin__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lazy_board_base_mixin__ = __webpack_require__(0);
 
 
-class LazyBoardView extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_board_mixin__["a" /* default */])(Polymer.Element) {
+class LazyBoardView extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_board_base_mixin__["a" /* default */])(Polymer.Element) {
 
   static get is() {
     return 'lazy-board-view';
@@ -191,23 +201,29 @@ class LazyBoardView extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__l
       withoutSession = boardData.withoutSession;
     }
 
-    directView.forEach(function (view) {
-      let path = view.getAttribute('path');
+    directView.forEach((view) => {
+      let viewPath = view.getAttribute('path');
 
-      view.routePath = actualScope + (path === '/' ? '' : path);
+      view.routePath = actualScope + (viewPath === '/' ? '' : viewPath);
 
-      if (!view.templateUrl) {
+      if (!view.hasAttribute('template-url')) {
         view.templateUrl = actualSourceScope.replace(/:/g, '_') + '/' + view.tagName.toLowerCase() + '.html';
+      } else {
+        view.templateUrl = view.getAttribute('template-url');
       }
 
-      if (!view.withSession && withSession) {
+      if (!view.hasAttribute('with-session') && withSession) {
         view.withSession = withSession;
+      } else if (view.hasAttribute('with-session')) {
+        view.withSession = view.getAttribute('with-session');
       }
 
-      if (!view.withoutSession && withoutSession) {
+      if (!view.hasAttribute('without-session') && withoutSession) {
         view.withoutSession = withoutSession;
+      } else if (view.hasAttribute('without-session')) {
+        view.withoutSession = true;
       }
-    }.bind(this));
+    });
 
     // Overriding another properties.
     let newBoardData = {
@@ -217,7 +233,7 @@ class LazyBoardView extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__l
        withoutSession
     };
 
-    directLazyBoardView.forEach(function (boardView) {
+    directLazyBoardView.forEach((boardView) => {
       boardView.assignBoardData(newBoardData);
     });
   }
@@ -226,17 +242,16 @@ class LazyBoardView extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__l
 /* harmony export (immutable) */ __webpack_exports__["a"] = LazyBoardView;
 
 
-customElements.define(LazyBoardView.is, LazyBoardView);
 
 /***/ }),
 /* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lazy_board_mixin__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lazy_board_base_mixin__ = __webpack_require__(0);
 
 
-class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_board_mixin__["a" /* default */])(Polymer.Element) {
+class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_board_base_mixin__["a" /* default */])(Polymer.Element) {
 
   static get is() {
     return 'lazy-board';
@@ -308,7 +323,7 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
     };
 
     // Assigning board data to each lazy-board-view
-    this._getDirectLazyBoardView().forEach(function (boardView) {
+    this._getDirectLazyBoardView().forEach((boardView) => {
       boardView.assignBoardData(boardData);
     });
 
@@ -317,14 +332,14 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
     let routes = [];
 
     // Hiding all children except lazy-board-view and getting each route path and tag name.
-    children.forEach(function (child) {
+    children.forEach((child) => {
       child.style.display = 'none';
 
       routes.push({
         path: child.routePath.replace(/^\//, '').split('/'),
         tagName: child.tagName.toLowerCase()
       });
-    }.bind(this));
+    });
 
     this._routes = routes;
 
@@ -524,8 +539,6 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
 /* harmony export (immutable) */ __webpack_exports__["a"] = LazyBoard;
 
 
-customElements.define(LazyBoard.is, LazyBoard);
-
 
 /***/ }),
 /* 3 */
@@ -535,10 +548,10 @@ customElements.define(LazyBoard.is, LazyBoard);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lazy_board__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lazy_board_view__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lazy_board_mixin__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lazy_board_base_mixin__ = __webpack_require__(0);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "LazyBoard", function() { return __WEBPACK_IMPORTED_MODULE_0__lazy_board__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "LazyBoardView", function() { return __WEBPACK_IMPORTED_MODULE_1__lazy_board_view__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "LazyBoardMixin", function() { return __WEBPACK_IMPORTED_MODULE_2__lazy_board_mixin__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "LazyBoardMixin", function() { return __WEBPACK_IMPORTED_MODULE_2__lazy_board_base_mixin__["a"]; });
 
 
 
@@ -547,3 +560,4 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ })
 /******/ ]);
+});

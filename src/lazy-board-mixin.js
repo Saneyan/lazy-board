@@ -1,30 +1,15 @@
 export default (superClass) => {
+
   return class extends superClass {
 
-    _getDirectView() {
-      let child, children = [];
-
-      for (let i in this.children) {
-        child = this.children[i];
-        if (child.tagName && child.tagName !== 'LAZY-BOARD-VIEW') {
-          children.push(child);
-        }
-      }
-
-      return children;
+    switchView(path) {
+      window.dispatchEvent(new CustomEvent('lazy-board-switch-view', {
+        detail: { path }
+      }));
     }
 
-    _getDirectLazyBoardView() {
-      let child, children = [];
-
-      for (let i in this.children) {
-        child = this.children[i];
-        if (child.tagName === 'LAZY-BOARD-VIEW') {
-          children.push(child);
-        }
-      }
-
-      return children;
+    notifyNotFound() {
+      window.dispatchEvent(new CustomEvent('lazy-board-not-found'));
     }
   }
 }

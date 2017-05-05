@@ -1,4 +1,14 @@
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["LazyBoardDemo"] = factory();
+	else
+		root["LazyBoardDemo"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -68,8 +78,9 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 class SyAdminView extends Polymer.Element {
 
   static get is() {
@@ -84,13 +95,15 @@ class SyAdminView extends Polymer.Element {
     });
   }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = SyAdminView;
 
-customElements.define(SyAdminView.is, SyAdminView);
+
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 class SyApp extends Polymer.Element {
 
   static get is() {
@@ -103,20 +116,25 @@ class SyApp extends Polymer.Element {
     this.$.board.addEventListener('lazy-board-unmatched-session', (e) => {
       switch (e.detail.expects) {
         case 'admin':
+          console.log('Expected with admin session');
           break;
         case 'no_session':
+          console.log('Expected without session');
+          this.$.board.switchView('/components/lazy-board/demo/admin');
           break;
       }
     });
   }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = SyApp;
 
-customElements.define(SyApp.is, SyApp);
+
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 class SyHomeView extends Polymer.Element {
 
   static get is() {
@@ -135,26 +153,30 @@ class SyHomeView extends Polymer.Element {
     })
   }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = SyHomeView;
 
-customElements.define(SyHomeView.is, SyHomeView);
+
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 class SyPictureListView extends Polymer.Element {
 
   static get is() {
     return 'sy-picture-list-view';
   }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = SyPictureListView;
 
-customElements.define(SyPictureListView.is, SyPictureListView);
+
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 class SyPictureView extends Polymer.Element {
 
   static get is() {
@@ -194,13 +216,15 @@ class SyPictureView extends Polymer.Element {
     }
   }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = SyPictureView;
 
-customElements.define(SyPictureView.is, SyPictureView);
+
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 class SySession extends Polymer.Element {
 
   static get is() {
@@ -211,26 +235,48 @@ class SySession extends Polymer.Element {
     return {
       session: {
         type: String,
-        value: null
+        value: null,
+        notify: true
       }
     };
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+
+    let session = localStorage.getItem('session');
+
+    if (session) {
+      this.set('session', session);
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'session') {
+        this.session = e.newValue;
+      }
+      console.log('ok')
+    }, false);
+  }
+
   setSession(session) {
-    this.session = session;
+    localStorage.setItem('session', session);
   }
 
   revokeSession() {
-    this.session = null;
+    localStorage.removeItem('session');
   }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = SySession;
+
 
 customElements.define(SySession.is, SySession);
 
+
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 class SySigninView extends Polymer.Element {
 
   static get is() {
@@ -245,8 +291,9 @@ class SySigninView extends Polymer.Element {
     });
   }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = SySigninView;
 
-customElements.define(SySigninView.is, SySigninView);
+
 
 /***/ }),
 /* 7 */
@@ -254,20 +301,22 @@ customElements.define(SySigninView.is, SySigninView);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sy_admin_view__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sy_admin_view___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__sy_admin_view__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__admin_sy_admin_view__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sy_home_view__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sy_home_view___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__sy_home_view__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sy_picture_list_view__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sy_picture_list_view___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__sy_picture_list_view__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sy_picture_view__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sy_picture_view___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__sy_picture_view__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__sy_session__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__sy_session___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__sy_session__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__sy_signin_view__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__sy_signin_view___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__sy_signin_view__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__sy_app__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__sy_app___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__sy_app__);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "SyAdminView", function() { return __WEBPACK_IMPORTED_MODULE_0__admin_sy_admin_view__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "SyApp", function() { return __WEBPACK_IMPORTED_MODULE_6__sy_app__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "SyHomeView", function() { return __WEBPACK_IMPORTED_MODULE_1__sy_home_view__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "SyPictureListView", function() { return __WEBPACK_IMPORTED_MODULE_2__sy_picture_list_view__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "SyPictureView", function() { return __WEBPACK_IMPORTED_MODULE_3__sy_picture_view__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "SySession", function() { return __WEBPACK_IMPORTED_MODULE_4__sy_session__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "SySigninView", function() { return __WEBPACK_IMPORTED_MODULE_5__sy_signin_view__["a"]; });
+
+
 
 
 
@@ -278,3 +327,4 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ })
 /******/ ]);
+});

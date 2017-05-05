@@ -1,4 +1,4 @@
-class SyPictureView extends Polymer.Element {
+export default class SyPictureView extends Polymer.Element {
 
   static get is() {
     return 'sy-picture-view';
@@ -37,5 +37,3 @@ class SyPictureView extends Polymer.Element {
     }
   }
 }
-
-customElements.define(SyPictureView.is, SyPictureView);

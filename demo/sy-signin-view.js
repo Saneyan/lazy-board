@@ -1,4 +1,4 @@
-class SySigninView extends Polymer.Element {
+export default class SySigninView extends Polymer.Element {
 
   static get is() {
     return 'sy-signin-view';
@@ -12,5 +12,3 @@ class SySigninView extends Polymer.Element {
     });
   }
 }
-
-customElements.define(SySigninView.is, SySigninView);
