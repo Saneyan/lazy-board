@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "webpack",
-    "build:demo": "webpack --config ./webpack.demo.js"
+    "build:demo": "webpack --config ./webpack.demo.config.js"
   },
   "main": "src/index.js",
   "repository": {
