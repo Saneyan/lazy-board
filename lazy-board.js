@@ -382,7 +382,7 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
 
     view.style.display = 'block';
 
-    if (view.is) {
+    if (view.constructor.is) {
       // The view has been registered, dispatch entry event with route option.
       view.dispatchEvent(new CustomEvent('lazy-board-view-entry', {
         detail: routeOption
@@ -399,7 +399,7 @@ class LazyBoard extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lazy_
    * This method dispatches exit event for the view.
    */
   deactivateView() {
-    if (this.currentView.is) {
+    if (this.currentView.constructor.is) {
       this.currentView.dispatchEvent(new CustomEvent('lazy-board-view-exit'));
     }
     // The current view is hiding.

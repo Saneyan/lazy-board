@@ -131,7 +131,7 @@ export default class LazyBoard extends LazyBoardBaseMixin(Polymer.Element) {
 
     view.style.display = 'block';
 
-    if (view.is) {
+    if (view.constructor.is) {
       // The view has been registered, dispatch entry event with route option.
       view.dispatchEvent(new CustomEvent('lazy-board-view-entry', {
         detail: routeOption
@@ -148,7 +148,7 @@ export default class LazyBoard extends LazyBoardBaseMixin(Polymer.Element) {
    * This method dispatches exit event for the view.
    */
   deactivateView() {
-    if (this.currentView.is) {
+    if (this.currentView.constructor.is) {
       this.currentView.dispatchEvent(new CustomEvent('lazy-board-view-exit'));
     }
     // The current view is hiding.
