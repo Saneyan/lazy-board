@@ -14,12 +14,12 @@
     "web-components"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0-rc.7",
-    "iron-location": "polymerelements/iron-location#2.0-preview"
+    "polymer": "Polymer/polymer#^2.0.0",
+    "iron-location": "polymerelements/iron-location#^2.0.0"
   },
   "devDependencies": {
     "test-fixture": "PolymerElements/test-fixture#^3.0.0-rc.1",
     "web-component-tester": "Polymer/web-component-tester#^6.0.0-prerelease.9",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0-rc.9"
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
   }
 }
