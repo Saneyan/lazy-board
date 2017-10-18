@@ -87,7 +87,7 @@ export default class LazyBoardView extends LazyBoardBaseMixin(Polymer.Element) {
       view.routePath = actualScope + (viewPath === '/' ? '' : viewPath);
 
       if (!view.hasAttribute('template-url')) {
-        view.templateUrl = actualSourceScope.replace(/:/g, '_') + '/' + view.tagName.toLowerCase() + '.html';
+        view.templateUrl = actualSourceScope.replace(/\/:/g, '/_') + '/' + view.tagName.toLowerCase() + '.html';
       } else {
         view.templateUrl = view.getAttribute('template-url');
       }

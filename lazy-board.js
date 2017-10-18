@@ -207,7 +207,7 @@ class LazyBoardView extends __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__l
       view.routePath = actualScope + (viewPath === '/' ? '' : viewPath);
 
       if (!view.hasAttribute('template-url')) {
-        view.templateUrl = actualSourceScope.replace(/:/g, '_') + '/' + view.tagName.toLowerCase() + '.html';
+        view.templateUrl = actualSourceScope.replace(/\/:/g, '/_') + '/' + view.tagName.toLowerCase() + '.html';
       } else {
         view.templateUrl = view.getAttribute('template-url');
       }
