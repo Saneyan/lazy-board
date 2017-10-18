@@ -1,6 +1,6 @@
 {
   "name": "lazy-board",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Session based routing and lazy HTML importing.",
   "author": {
     "name": "TADOKORO Saneyuki",

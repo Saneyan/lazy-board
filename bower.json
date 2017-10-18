@@ -1,7 +1,7 @@
 {
   "name": "lazy-board",
   "description": "Session based routing and lazy HTML importing.",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "license": "MIT",
   "authors": [
     "TADOKORO Saneyuki <saneyan@gfunction.com>"
@@ -14,7 +14,7 @@
     "web-components"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.1",
+    "polymer": "Polymer/polymer#^2.1.1",
     "iron-location": "polymerelements/iron-location#^2.0.0"
   },
   "devDependencies": {
