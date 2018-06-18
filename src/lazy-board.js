@@ -1,10 +1,7 @@
+import { PolymerElement, html } from '@polymer/polymer';
 import LazyBoardBaseMixin from './lazy-board-base-mixin';
 
-export default class LazyBoard extends LazyBoardBaseMixin(Polymer.Element) {
-
-  static get is() {
-    return 'lazy-board';
-  }
+class LazyBoard extends LazyBoardBaseMixin(PolymerElement) {
 
   static get observers() {
     return ['_routeChanged(_path, _queryParams, _routes, session)'];
@@ -62,11 +59,22 @@ export default class LazyBoard extends LazyBoardBaseMixin(Polymer.Element) {
     };
   }
 
+  static get template() {
+    html`
+      <iron-location path="{{_path}}" query="{{_query}}"></iron-location>
+      <iron-query-params
+          params-string="[[_query]]"
+          params-object="{{_queryParams}}"></iron-query-params>
+
+      <slot></slot>
+    `;
+  }
+
   connectedCallback() {
     super.connectedCallback();
 
     // Preparing board data for each lazy-board-view. This object should be immutable.
-    let boardData = {
+    const boardData = {
       actualSourceScope: this.sourceBaseUrl || this.baseUrl,
       actualScope: this.baseUrl
     };
@@ -76,7 +84,7 @@ export default class LazyBoard extends LazyBoardBaseMixin(Polymer.Element) {
       boardView.assignBoardData(boardData);
     });
 
-    let children = Polymer.dom(this).querySelectorAll(':not(lazy-board-view)');
+    const children = this.querySelectorAll(':not(lazy-board-view)');
 
     let routes = [];
 
@@ -113,8 +121,7 @@ export default class LazyBoard extends LazyBoardBaseMixin(Polymer.Element) {
    * @param routeOption
    */
   activateView(tagName, routeOption) {
-    let templateUrl;
-    let view = Polymer.dom(this).querySelector(tagName);
+    const view = this.querySelector(tagName);
 
     // Current session and expected session is not matched, then aborting to activate.
     if (!this._matchSession(view)) {
@@ -138,8 +145,7 @@ export default class LazyBoard extends LazyBoardBaseMixin(Polymer.Element) {
       }));
     } else {
       // The view has not been registered, trying to import the HTML and dispatch entry event.
-      templateUrl = this.resolveUrl(view.templateUrl, null, null, true);
-      Polymer.importHref(templateUrl, this._importSuccess.bind(this, tagName, routeOption), this._importError.bind(this));
+      import(view.templateUrl).then(this._importSuccess.bind(this, tagName, routeOption), this._importError.bind(this));
     }
   }
 
@@ -259,7 +265,7 @@ export default class LazyBoard extends LazyBoardBaseMixin(Polymer.Element) {
    * @private
    */
   _importSuccess(tagName, routeOption) {
-    let view = Polymer.dom(this).querySelector(tagName);
+    const view = this.querySelector(tagName);
     view.dispatchEvent(new CustomEvent('lazy-board-view-entry', {
       detail: routeOption
     }));
@@ -285,3 +291,7 @@ export default class LazyBoard extends LazyBoardBaseMixin(Polymer.Element) {
   }
 
 }
+
+window.customElements.define('lazy-board', LazyBoard);
+
+export default LazyBoard;

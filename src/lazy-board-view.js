@@ -1,10 +1,7 @@
+import { LitElement, html } from '@polymer/lit-element';
 import LazyBoardBaseMixin from './lazy-board-base-mixin';
 
-export default class LazyBoardView extends LazyBoardBaseMixin(Polymer.Element) {
-
-  static get is() {
-    return 'lazy-board-view';
-  }
+class LazyBoardView extends LazyBoardBaseMixin(LitElement) {
 
   static get properties() {
     return {
@@ -51,10 +48,10 @@ export default class LazyBoardView extends LazyBoardBaseMixin(Polymer.Element) {
    * @param boardData
    */
   assignBoardData(boardData) {
-    let directView = this._getDirectView();
-    let directLazyBoardView = this._getDirectLazyBoardView();
-    let scope = this.scope === '/' ? '' : this.scope;
-    let sourceScope = !this.sourceScope ? scope : this.sourceScope === '/' ? '' : this.sourceScope;
+    const directView = this._getDirectView();
+    const directLazyBoardView = this._getDirectLazyBoardView();
+    const scope = this.scope === '/' ? '' : this.scope;
+    const sourceScope = !this.sourceScope ? scope : this.sourceScope === '/' ? '' : this.sourceScope;
     let actualScope, actualSourceScope, withSession, withoutSession;
 
     if (boardData.actualScope === '/' && scope.charAt(0) === '/') {
@@ -82,12 +79,12 @@ export default class LazyBoardView extends LazyBoardBaseMixin(Polymer.Element) {
     }
 
     directView.forEach((view) => {
-      let viewPath = view.getAttribute('path');
+      const viewPath = view.getAttribute('path');
 
       view.routePath = actualScope + (viewPath === '/' ? '' : viewPath);
 
       if (!view.hasAttribute('template-url')) {
-        view.templateUrl = actualSourceScope.replace(/\/:/g, '/_') + '/' + view.tagName.toLowerCase() + '.html';
+        view.templateUrl = actualSourceScope.replace(/\/:/g, '/_') + '/' + view.tagName.toLowerCase() + '.js';
       } else {
         view.templateUrl = view.getAttribute('template-url');
       }
@@ -106,7 +103,7 @@ export default class LazyBoardView extends LazyBoardBaseMixin(Polymer.Element) {
     });
 
     // Overriding another properties.
-    let newBoardData = {
+    const newBoardData = {
        actualSourceScope,
        actualScope,
        withSession,
@@ -118,4 +115,12 @@ export default class LazyBoardView extends LazyBoardBaseMixin(Polymer.Element) {
     });
   }
 
+  _render() {
+    html`<slot></slot>`;
+  }
+
 }
+
+window.customElements.define('lazy-board-view', LazyBoardView);
+
+export default LazyBoardView;

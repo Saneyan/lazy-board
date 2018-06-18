@@ -1,4 +1,5 @@
 export default (superClass) => {
+
   return class extends superClass {
 
     _getDirectView() {

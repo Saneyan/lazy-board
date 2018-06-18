@@ -1,15 +1,11 @@
 {
   "name": "lazy-board",
-  "version": "2.0.2",
+  "version": "3.0.0-rc1",
   "description": "Session based routing and lazy HTML importing.",
   "author": {
     "name": "TADOKORO Saneyuki",
     "email": "saneyan@gfunction.com",
     "url": "https://gfunction.com"
-  },
-  "scripts": {
-    "build": "webpack",
-    "build:demo": "webpack --config ./webpack.demo.config.js"
   },
   "main": "src/index.js",
   "repository": {
@@ -17,6 +13,8 @@
     "url": "https://github.com/Saneyan/lazy-board.git"
   },
   "dependencies": {
-    "webpack": "^2.4.1"
+    "@polymer/iron-location": "^3.0.0-pre.19",
+    "@polymer/lit-element": "^0.5.2",
+    "@polymer/polymer": "^3.0.2"
   }
 }
